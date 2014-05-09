@@ -1,0 +1,82 @@
+<h1><%= @place.name %>   <%= link_to "Edit Place", edit_place_path(@place), class: "btn btn-primary btn-sm" %></h1><br>
+
+<div class="row">
+  <div class="col-sm-6">
+    <% if @place.address %>
+      <h4>Address: <br></h4>
+        <%= @place.address %><br>
+    <% end %>
+
+    <h4>Description: <br></h4>
+      <%= @place.description %><br><br>
+
+    <% if @place.happy_hours.length > 0 %>
+      <h2>Happy Hour</h2>
+      <h4>Details:<br></h4>
+        <%= @place.happy_hours.first.details %><br>
+
+      <h4>
+        Time:
+        <%= @place.happy_hours.first.start_time.strftime(" %l:%M %p ") %> -
+        <%= @place.happy_hours.first.end_time.strftime(" %l:%M %p ") %><br><br>
+      </h4>
+    <% else %>
+      <h4>
+        Does <%= @place.name %> have happy hour?<br></h4>
+        <%= link_to "Add Happy Hour", new_happy_hour_path(id: @place.id), :class => "btn btn-primary" %>
+    <% end %>
+  </div>
+  <div class="col-sm-6">
+    <% if @address %>
+      <iframe
+        width="600"
+        height="450"
+        frameborder="0" style="border:0"
+        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAzW0SvELhV_eiTPvfxBtHrGd5oBozh2Uc
+          &q=<%= @name %>+<%= @address %>">
+    <% else %>
+      <iframe
+        width="600"
+        height="450"
+        frameborder="0" style="border:0"
+        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAzW0SvELhV_eiTPvfxBtHrGd5oBozh2Uc
+          &q=<%= @name %>">
+    <% end %>
+      </iframe>
+    <%= link_to "Edit Place", edit_place_path(@place), class: "btn btn-primary" %>
+
+  </div>
+</div>
+
+    <h4>Reviews</h4>
+    <% if @place.ratings.count > 0 %>
+      <% @place.ratings.order(:updated_at).each do |rating| %>
+        <h2>
+          <% rating.score.times do %>
+            <img src="http://openclipart.org/image/45px/svg_to_png/73591/beer1.png">
+          <% end %>
+        </h2>
+        <p><%= rating.review %></p>
+        <% if current_user && rating.user_id == current_user.id %>
+          <%= link_to "Edit Review", edit_rating_path(rating), class: "btn btn-warning btn-sm" %>
+        <% elsif %>
+          <h4>You have not reviewed <%= @place.name %></h4>
+          <%= link_to "Add Rating", new_rating_path(id: @place.id), class: "btn btn-primary" %>
+        <% end %>
+      <% end %>
+    <% else %>
+      <h4><%= @place.name %> hasn't been reviewed yet. Be the first!</h4>
+      <%= link_to "Add Rating", new_rating_path(id: @place.id), class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+  <div class="col-sm-6">
+    <iframe
+      width="600"
+      height="450"
+      frameborder="0" style="border:0"
+      src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAzW0SvELhV_eiTPvfxBtHrGd5oBozh2Uc
+        &q=<%= @name %>">
+    </iframe>
+  </div>
+</div>
